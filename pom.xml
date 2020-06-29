@@ -41,6 +41,8 @@
         <module>spring-boot-web</module>
         <module>spring-boot-web-thymeleaf</module>
         <module>spring-boot-webflux</module>
+        <module>spring-boot-exception</module>
+        <module>spring-boot-annotation</module>
     </modules>
 
     <build>
