@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.Length;
  **/
 @Getter
 @Setter
-@PasswordEqual(message = "密码不同！")
+@PasswordEqual()
 public class PersonDTO {
 
     @Length(min = 2,max = 10,message = "长度不符")

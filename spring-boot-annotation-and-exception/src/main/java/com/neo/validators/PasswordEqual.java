@@ -16,7 +16,11 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = PasswordValidator.class)
 public @interface PasswordEqual {
 
-    String message() default "";
+    int min() default 4;
+
+    int max() default 6;
+
+    String message() default "password is wrong!";
 
     Class<?>[] groups() default {};
 
