@@ -1,19 +1,25 @@
 package com.neo.mapper;
 
-import java.util.List;
-
 import com.neo.model.User;
 
+import java.util.List;
+
 public interface UserMapper {
-	
-	List<User> getAll();
-	
-	User getOne(Long id);
 
-	void insert(User user);
+    List<User> getAll();
 
-	void update(User user);
+    /**
+     * 分页查询用户
+     * @return
+     */
+    List<User> selectPage();
 
-	void delete(Long id);
+    User getOne(Long id);
+
+    void insert(User user);
+
+    void update(User user);
+
+    void delete(Long id);
 
 }
