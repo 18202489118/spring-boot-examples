@@ -5,7 +5,8 @@
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
         <result column="password" property="passWord" jdbcType="VARCHAR"/>
-        <result column="user_sex" property="userSex" typeHandler="com.neo.config.EnumTypeHandler" javaType="com.neo.enums.UserSexEnum"/>
+        <result column="user_sex" property="userSex" typeHandler="com.neo.config.EnumTypeHandler"
+                javaType="com.neo.enums.UserSexEnum"/>
         <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
     </resultMap>
 
@@ -37,7 +38,7 @@
        		users
        		(user_name,password,user_sex)
        	VALUES
-       		(#{userName}, #{passWord}, #{userSex})
+       		(#{userName}, #{passWord}, #{userSex, typeHandler=com.neo.config.EnumTypeHandler})
     </insert>
 
     <update id="update" parameterType="com.neo.model.User">
@@ -46,6 +47,7 @@
         SET
         <if test="userName != null">user_name = #{userName},</if>
         <if test="passWord != null">password = #{passWord},</if>
+        <if test="userSex != null">user_sex = #{userSex,typeHandler=com.neo.config.EnumTypeHandler},</if>
         nick_name = #{nickName}
         WHERE
         id = #{id}
