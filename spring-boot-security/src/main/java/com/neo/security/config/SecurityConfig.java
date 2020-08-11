@@ -7,11 +7,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 /**
  * @description:
@@ -30,6 +35,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationFailureHandler sAuthenticationFailureHandler;
     @Autowired
     private ValidateCodeFilter validateCodeFilter;
+    @Autowired
+    private DataSource dataSource;
+    @Autowired
+    private UserDetailsService myUserDetailsService;
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+//        tokenRepository.setCreateTableOnStartup(true);
+        return tokenRepository;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -40,6 +57,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/authentication/form")
                 .successHandler(sAuthenticationSuccessHandler)
                 .failureHandler(sAuthenticationFailureHandler)
+                .and()
+                .rememberMe()//记住我
+                .tokenRepository(persistentTokenRepository())//处理token
+                .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())//token有效时间
+                .userDetailsService(myUserDetailsService)//登录
                 .and()
                 .authorizeRequests()//下面都是授权配置
                 .antMatchers("/authentication/require", "/error"
